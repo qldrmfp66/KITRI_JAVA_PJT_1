@@ -7,14 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//½Ì±ÛÅÏ
+//ï¿½Ì±ï¿½ï¿½ï¿½
 public class ChatDAO {
 	private static final String Driver = "oracle.jdbc.driver.OracleDriver";
-	private static final String URL = "jdbc:oracle:thin:@192.168.219.104:1521:xe";
+	private static final String URL = "jdbc:oracle:thin:@192.168.0.21:1521:xe";
 	private static final String ID = "c##ora_user";
 	private static final String PW = "12345";
 
 	private static ChatDAO instance = null;//singleton pattern
+	private List<Integer> codeList = new ArrayList<Integer>(); //ì—¬íƒœê» ì €ì¥í–ˆë˜ code
 	
 	private ChatDAO() {
 		try {
@@ -42,7 +43,7 @@ public class ChatDAO {
 	public void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null)
-                rs.close();// À¯È¿¼º°Ë»ç ÈÄ ÀÚ¿ø ¹İ³³
+                rs.close();// ï¿½ï¿½È¿ï¿½ï¿½ï¿½Ë»ï¿½ ï¿½ï¿½ ï¿½Ú¿ï¿½ ï¿½İ³ï¿½
             if (pstmt != null)
                 pstmt.close();
             if (conn != null)
@@ -53,32 +54,92 @@ public class ChatDAO {
         }
 	}
 	
-	//Ã¤ÆÃ»ı¼º
-	public void insertChat(Chat chat) {
+	//ì±„íŒ…ë°©ë§Œë“¤ê¸°
+	public int insertChat(Chat chat) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String query = "insert into chat(chat_code, chat_title, user_no, chat_date) values(?,?,?,sysdate)";
+		int randCode = 1000; 
+		do {
+			randCode = (int)((Math.random() * 9000) + 1000); //1000~9999
+			try {
+				getExistedCode(); //ì´ë¯¸ ë§Œë“¤ì–´ë‘” ì½”ë“œë¦¬ìŠ¤íŠ¸ ë½‘ì•„ì˜¤ê¸°
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("ìƒì„±ëœ randCode:" + randCode);
+		}while(codeList != null && codeList.contains(randCode)); //ì¤‘ë³µê²€ì‚¬
 		
 		try {
 			conn = getConnection();
 			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, chat.getChat_code());
+			pstmt.setInt(1, randCode);
 			pstmt.setString(2, chat.getChat_title());
 			pstmt.setInt(3, chat.getUser_no());
 			if(pstmt.executeUpdate()==1) {
-				System.out.println("[" + chat.getUser_no() + "]" + "¼º°øÀûÀ¸·Î Ã¤ÆÃÀ» »ı¼ºÇß½À´Ï´Ù");
+				System.out.println("[" + chat.getChat_title() + "]" + "ë°©ì´ ìƒì„±ë˜ì—ˆìŠµë‹ˆë‹¤.");
 				conn.commit();
 			}else {
-				System.out.println("Ã¤ÆÃÄÚµå »ı¼º ½ÇÆĞ");
+				System.out.println("Ã¤ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 			}	
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
 			this.close(conn, pstmt, null);
 		}
+		return randCode;
 	}
 	
-	//ÇØ´çÇÏ´Â ¹æÀ» ¿ÀÇÂÇØÁÖ±â À§ÇÑ(°Ë»ö¿ë)
+	//ì±„íŒ…ë°©ì‚­ì œí•˜ê¸°
+		public int deleteChat(String chat_code) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			String query = "delete from chat where chat_code = ?";
+			int result = 0;
+			try {
+				conn = getConnection();
+				conn.setAutoCommit(false); //ìë™ì»¤ë°‹ false
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, chat_code);
+				if(pstmt.executeUpdate()==1) {
+					System.out.println("[" + chat_code + "]" + "ë°©ì´ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
+					conn.commit();
+					result = 1; 
+				}else {
+					result = -1;
+					System.out.println("ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
+				}	
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}finally {
+				this.close(conn, pstmt, null);
+			}
+			return result;
+		}
+	//ì½”ë“œ ì¤‘ë³µí”¼í•˜ë ¤ê³  ìˆë˜ ì½”ë“œ ë¶ˆëŸ¬ì˜´
+	public void getExistedCode() throws Exception{
+		//List<Integer> codeList = null;
+		codeList = null; //í˜¸ì¶œì‹œë§ˆë‹¤ ë¹„ìš°ê³  ë‹¤ì‹œ ì°¾ê¸°
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "select chat_code from chat";
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				codeList.add(rs.getInt("chat_code"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			this.close(conn, pstmt, rs);
+		}
+	}
+	
+	//ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ë»ï¿½ï¿½ï¿½)
 	public Chat getChat(String chat_code) throws Exception{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -104,18 +165,19 @@ public class ChatDAO {
 		return chat;
 	}
 	
-	//ÀüÃ¼Á¶È¸
-	public List<Chat> getAllChat() throws Exception{
+	//ï¿½ï¿½Ã¼ï¿½ï¿½È¸
+	public List<Chat> getMyChat(int user_no) throws Exception{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		List<Chat> chats = new ArrayList<Chat>();
-		String query = "select * from chat";
+		String query = "select * from chat where user_no = ?";
 		ResultSet rs = null;
 		Chat chat = null;
 		try {
 			conn = getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, user_no);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				chat = new Chat();

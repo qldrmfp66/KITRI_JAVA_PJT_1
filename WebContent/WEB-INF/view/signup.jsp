@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -226,32 +227,34 @@ h1 {
   <div class="frame">
     <div class="nav">
       <ul class"links">
-        <li class="signin-active"><a class="btn">Create an Event!</a></li>
+        <li class="signin-active"><a class="btn">Welcome~~!!</a></li>
       </ul>
-   </div><!-- nav -->
+    </div>
     <div ng-app ng-init="checked = false">
-		<form class="form-signin" action="createchat" method="post">
-	            <label for="eventname">Event Name</label>
-	          <input class="form-styling" type="text" name="eventname" placeholder=""/>
+		<form class="form-signin" action="signup" method="post">
+	            <label for="eventname">성명</label>
+	          <input class="form-styling" type="text" name="username" placeholder=""/>
 	            
-	            <label for="host">Host</label>
-	            <div class="form-styling" style="font:bold 돋움체;">${user_name}</div>
-
+	            <label for="host">아이디</label>
+	          <input class="form-styling" type="text" name="userid" placeholder=""/>
 	            
-	            <label for="eventcode">Event code</label>
-	         <div class="form-styling" style="font:bold 돋움체;">자동으로 생성됩니다.</div>
+	            <label for="eventcode">패스워드</label>
+	          <input class="form-styling" type="text" name="userpw" placeholder=""/>
 	          
 	          <div class="btn-animate">
 	          <script>
-	          function makeChat(){
-	        	  alert("채팅방이 생성되었습니다.");
+	          function join(){
+	        	  alert("회원가입 되었습니다.");
 	          }
 	          </script>
-	          <button class = "btn-sigin" type="submit" onClick="makeChat();" formmethod="POST" value="입장">CREATE!</button>
+	          <button class = "btn-sigin" type="submit" onClick="join();" formmethod="POST" value="회원가입">Send</button>
 	          </div>
-	          
 		</form>
-</div><!-- frame -->
-</div><!-- container -->
+		<c:if test = "${joinResult !=1 }">
+			<script>
+				alert("회원가입을 실패했습니다.");
+			</script>
+		</c:if>
+</div>
 </body>
 </html>
