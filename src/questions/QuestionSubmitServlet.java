@@ -23,7 +23,7 @@ public class QuestionSubmitServlet extends HttpServlet {
 		if(userNo == null || userNo.equals("") || chatCode == null || chatCode.equals("") ||questionContent == null || questionContent.equals("")) {
 			response.getWriter().write("0");
 		} else {
-			response.getWriter().write(new QuestionDAO().submit(Integer.parseInt(userNo), Integer.parseInt(chatCode), questionContent)+ "");
+			response.getWriter().write(new QuestionDAO().submit(Integer.parseInt(chatCode), Integer.parseInt(userNo), questionContent)+ "");
 		}
 		
 	}

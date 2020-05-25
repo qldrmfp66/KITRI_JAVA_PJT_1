@@ -35,7 +35,7 @@ public class QuestionListServlet extends HttpServlet {
 		}
 	}
 	
-	// 질문만 불러옴
+	// 질문 불러옴
 	public String getListByID(String questionNo) {
 		StringBuffer result = new StringBuffer("");
 		result.append("{\"result\":[");
@@ -43,7 +43,9 @@ public class QuestionListServlet extends HttpServlet {
 		ArrayList<Question> questionList = questionDAO.getQuestionListByRecent(questionNo);
 		if(questionList.size() == 0 ) return "";
 		for(int i = 0; i < questionList.size(); i++) {
-			result.append("[{\"value\": \"" + questionList.get(i).getQuestionContent()+ "\"}]");
+			result.append("[{\"value\": \"" + questionList.get(i).getQuestionContent()+ "\"},");
+			result.append("{\"value\": \"" + questionList.get(i).getLikeCount()+ "\"},");
+			result.append("{\"value\": \"" + questionList.get(i).getQuestionNo()+ "\"}]");
 			if(i != questionList.size() -1) result.append(",");
 		}
 		result.append("], \"last\":\"" + questionList.get(questionList.size()-1).getQuestionNo()+"\"}");
@@ -58,8 +60,9 @@ public class QuestionListServlet extends HttpServlet {
 		ArrayList<Question> questionList = questionDAO.getQuestionListByRecent(10);
 		if(questionList.size() == 0 ) return "";
 		for(int i = 0; i < questionList.size(); i++) {
-			result.append("[{\"value\": \"" + questionList.get(i).getQuestionContent()+ "\"}]");
-//			result.append("{\"value\": \"" + questionList.get(i).getqCreateTime()+ "\"}]");
+			result.append("[{\"value\": \"" + questionList.get(i).getQuestionContent()+ "\"},");
+			result.append("{\"value\": \"" + questionList.get(i).getLikeCount()+ "\"},");
+			result.append("{\"value\": \"" + questionList.get(i).getQuestionNo()+ "\"}]");
 			if(i != questionList.size() -1) result.append(",");
 		}
 		result.append("], \"last\":\"" + questionList.get(questionList.size()-1).getQuestionNo()+"\"}");

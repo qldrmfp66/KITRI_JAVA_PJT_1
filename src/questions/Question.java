@@ -6,15 +6,17 @@ public class Question {
 	int userNo;
 	String questionContent;
 	String qCreateTime;
+	int likeCount;
 	
 	public Question(int questionNo, int chatCode, int userNo,
-			String questionContent, String qCreateTime) {
+			String questionContent, String qCreateTime, int likeCount) {
 		
 		setQuestionNo(questionNo);
 		setChatCode(chatCode);
 		setUserNo(userNo);
 		setQuestionContent(questionContent);
 		setqCreateTime(qCreateTime);
+		setLikeCount(likeCount);
 	}
 	
 	public int getQuestionNo() {
@@ -47,5 +49,14 @@ public class Question {
 	public void setqCreateTime(String qCreateTime) {
 		this.qCreateTime = qCreateTime;
 	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+	
 	
 }
