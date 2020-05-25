@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <link rel ="stylesheet" href="style.css"/>
 <title>Insert title here</title>
 <style>
@@ -45,6 +46,40 @@ h1, p{
 
 <body>
  <div class="head">
+<script>
+	function shareKakaotalk(){
+		var _title = "${chat.chat_title}"
+		
+		try{
+			if(Kakao){
+				Kakao.init("277d63deb226b1150f3a2ac34847f80f");
+			};
+		}catch(e){};
+		
+		Kakao.Link.sendDefault({
+			objectType:"feed",
+			content:{
+				title:"${chat.chat_title}" + "질문방입니다.",
+				description:"채팅번호" + "${chat.chat_code}",
+				imageUrl:"/image/card_image.png",
+				link:{
+					mobileWebUrl:"http://localhost:8080/chatting",
+					webUrl:"http://localhost:8080/chatting"
+				}
+			}
+			,buttons:[
+				{
+					title:"질문 보기"
+					,link :{
+						mobileWebUrl:"http://localhost:8080/chatting",
+						webUrl:"http://localhost:8080/chatting"
+					}
+				}
+			]
+		});
+	}
+</script>
+
  	<h1 class="head_item"><a href="/index"><span>Do you Have Any Question?</span></a></h1>
 		<!-- 로그인했을때 -->
 		<c:if test = "${not empty user_name}">
@@ -66,6 +101,9 @@ h1, p{
 		       </ul>
 		    </div>
   	    </c:if>
+  	 <button type = "button" onClick="shareKakaotalk();">
+   	 <img  onclick="shareKakaotalk();" src="//dev.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" class="pointer"/>
+	 </button>
  </div>			
  <!-- Createchat에서 넘어온경우 -->
  	<c:if test = "${not empty randCode}">
@@ -73,6 +111,7 @@ h1, p{
  			alert('팀원들에게 채팅코드 ${randCode}를 공유하세요!');
  		</script>
  	</c:if>
+
     <div class="margin-top first">
 		<h3 class="hidden">${chat.chat_title}</h3>
 			<table class="table">

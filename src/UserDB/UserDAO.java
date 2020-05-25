@@ -59,7 +59,7 @@ public class UserDAO {
 	public int insertUser(String user_name, String user_id, String user_pw) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into userdata(user_no, user_name, user_id, user_pw, user_authority) values(SEQ_NO.NEXTVAL,?,?,?,1)";
+		String query = "insert into userdata(user_no, user_name, user_id, user_pw, user_authority) values(USER_NO.NEXTVAL,?,?,?,1)";
 		int result = -1;
 		try {
 			conn = getConnection();

@@ -1,6 +1,6 @@
-package chatController;
+package questions;
+
 import java.io.IOException;
-import java.net.InetAddress;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,30 +13,28 @@ import ChatDB.Chat;
 import ChatDB.ChatDAO;
 import UserDB.User;
 
-@WebServlet(urlPatterns = {"/chatting"})
-public class Chatting extends HttpServlet{
+@WebServlet(urlPatterns = {"/question_main"})
+public class Question_Main_Controller extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		System.out.println("chatting.java get메소드 호출");
-		
-		
 		/*     채팅코드에 맞게 채팅 불러옴         */
 		String chat_code = request.getParameter("chat_code"); //mypage.jsp에서 넘어올때
 		ChatDAO chatDao = ChatDAO.getInstance();
 		Chat chat = null;
-		
+		System.out.println("question_main의 get메소드실행");
 		try {
 			chat = chatDao.getChat(chat_code); //Ŭ���� ��ȣ �޾ƿ���
+			request.setAttribute("chat",chat);//mypage.jsp에서 선택한 chat값
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    request.setAttribute("chat",chat);//index.java에서 넘어온 request값의 chat OR mypage.jsp에서 선택한 chat값
-		//System.out.println("chat : " + chat);
-		
-	
-		//forward
+		HttpSession session = request.getSession(true); //있으면 반환 없으면 null
+		if(session!= null && session.getAttribute("user") != null) {
+			 User user = (User)(session.getAttribute("user"));
+			 request.setAttribute("user_name",user.getUser_name());
+		}
 		request
-		.getRequestDispatcher("/WEB-INF/view/chatting.jsp")
+		.getRequestDispatcher("/WEB-INF/view/question_main.jsp")
 		.forward(request, response);
-	}//doGet
+	}
 }

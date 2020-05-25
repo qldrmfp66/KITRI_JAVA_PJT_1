@@ -28,7 +28,8 @@ public class DeleteChat extends HttpServlet {
 			  if(result ==1) { 
 				  System.out.println("삭제성공"); 
 			  }else {
-			  System.out.println("삭제실패"); }
+			  System.out.println("삭제실패"); 
+			  }
 			 
 		} catch (Exception e) {
 			e.printStackTrace();

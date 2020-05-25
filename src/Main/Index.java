@@ -18,7 +18,6 @@ public class Index extends HttpServlet {
 	int EnterSuccessResult = 1; //채팅방 입장 성공?
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		System.out.println("index.java의 get메소드 호출");
 		HttpSession session = request.getSession(true); //있으면 반환 없으면 null
 		   
 		/*     메인에서 유저의 상태 불러옴       */
@@ -74,7 +73,7 @@ public class Index extends HttpServlet {
 		if(EnterSuccessResult == -1 || EnterSuccessResult ==0) {
 			response.sendRedirect("index");
 		}else {
-		  request .getRequestDispatcher("/WEB-INF/view/chatting.jsp") 
+		  request .getRequestDispatcher("/WEB-INF/view/question.jsp") 
 		  .forward(request, response);
 		}
 	}//doPost
