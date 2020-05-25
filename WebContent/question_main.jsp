@@ -30,10 +30,14 @@
 	var lastNo = 0;
 	/* 질문 불러오기 */
 	function questionListFunction(type) {
+		<%-- var userNo = '<%= userNo %>'; --%>
+		var chatCode = '<%= chatCode %>';
 		$.ajax({
 			type: "POST",
 			url: "./questions",
 			data: {
+				/* userNo: encodeURIComponent(userNo),*/
+				chatCode: encodeURIComponent(chatCode),
 				listType: type
 			},
 		success: function(data){
@@ -51,10 +55,20 @@
 		/* content만 출력
 		++ 좋아요 갯수 추가 해야함 */
 		function addChat(chatContent) {
-			$('#chatList').append('<div>' +
-				chatContent +
-				'</div>' +
-				'<hr>');
+			$('#chatList').append(
+					'<div id="chat_div'+ qNo +'"">' +
+					'<div>' +
+					chatContent +
+					'</div>' +
+					'<form>' +
+					'<input type="hidden" value="'+ qNo + '">'+
+					'<input id = "like_btn" type="button" value="좋아요" onclick="likeFunction('+ qNo +');">' +
+					'</form>' +
+					'<div id="like_count'+ qNo +'"">' +
+					likeCount +
+					'</div>' +
+					'</div>' +
+					'<hr>');
 			
 			/* 자동 스코롤  */
 			$('#chatList').scrollTop($('#chatList')[0].scrollHeight);
