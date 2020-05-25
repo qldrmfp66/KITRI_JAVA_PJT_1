@@ -98,16 +98,16 @@
 				description:"채팅번호" + "${chat.chat_code}",
 				imageUrl:"/image/card_image.png",
 				link:{
-					mobileWebUrl:"http://localhost:8080/chatting?chat_code="+ "${chat.chat_code}",
-					webUrl:"http://localhost:8080/chatting?chat_code=" + "${chat.chat_code}"
+					mobileWebUrl:"http://localhost:8080/question_main?chat_code="+ "${chat.chat_code}",
+					webUrl:"http://localhost:8080/question_main?chat_code=" + "${chat.chat_code}"
 				}
 			}
 			,buttons:[
 				{
 					title:"질문 보기"
 					,link :{
-						mobileWebUrl:"http://localhost:8080/chatting?chat_code="+ "${chat.chat_code}",
-						webUrl: "http://localhost:8080/chatting?chat_code=" + "${chat.chat_code}"
+						mobileWebUrl:"http://localhost:8080/question_main?chat_code="+ "${chat.chat_code}",
+						webUrl: "http://localhost:8080/question_main?chat_code=" + "${chat.chat_code}"
 					}
 				}
 			]
